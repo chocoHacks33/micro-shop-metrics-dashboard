@@ -74,6 +74,10 @@ h2 { margin-bottom: 0; font-size: 1.45rem; }
 
 .panel { margin-top: 1rem; padding: 1.25rem; }
 .panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.panel-actions { display: flex; align-items: center; gap: 0.7rem; }
+.secondary-button { border: 1px solid #bdc8bc; border-radius: 0.65rem; padding: 0.55rem 0.8rem; background: #fff; color: #264f34; font: inherit; font-size: 0.82rem; font-weight: 750; cursor: pointer; }
+.secondary-button:hover { background: #f2f7f0; }
+.secondary-button:focus-visible { outline: 3px solid rgba(79, 138, 91, 0.3); outline-offset: 2px; }
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; }
 th, td { padding: 0.9rem 0.75rem; border-bottom: 1px solid #e8ebe7; text-align: left; }
