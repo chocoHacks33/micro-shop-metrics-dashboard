@@ -74,6 +74,12 @@ h2 { margin-bottom: 0; font-size: 1.45rem; }
 
 .panel { margin-top: 1rem; padding: 1.25rem; }
 .panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.revenue-chart { display: grid; grid-template-columns: repeat(7, minmax(3.2rem, 1fr)); align-items: end; gap: 0.65rem; min-height: 12rem; margin: 0; padding: 0; list-style: none; }
+.revenue-day { display: grid; grid-template-rows: 8rem auto auto; align-items: end; gap: 0.35rem; min-width: 0; color: #65706a; text-align: center; }
+.revenue-bar-wrap { display: flex; height: 8rem; align-items: flex-end; justify-content: center; border-bottom: 1px solid #dfe4de; }
+.revenue-bar { width: min(2.3rem, 72%); min-height: 0.3rem; border-radius: 0.45rem 0.45rem 0.15rem 0.15rem; background: linear-gradient(180deg, #8bb26e, #3e7451); }
+.revenue-day strong { overflow: hidden; color: #34433b; font-size: 0.78rem; text-overflow: ellipsis; }
+.revenue-day time { font-size: 0.72rem; }
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; }
 th, td { padding: 0.9rem 0.75rem; border-bottom: 1px solid #e8ebe7; text-align: left; }
@@ -88,6 +94,7 @@ footer { padding: 1.5rem 0 3rem; color: #717b76; font-size: 0.8rem; text-align: 
 @media (max-width: 760px) {
   .site-header { align-items: flex-start; flex-direction: column; padding-top: 2.5rem; }
   .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .revenue-chart { overflow-x: auto; grid-template-columns: repeat(7, minmax(4rem, 1fr)); }
 }
 
 @media (max-width: 480px) {

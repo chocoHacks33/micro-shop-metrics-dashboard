@@ -28,6 +28,37 @@ function summarizeOrders(orders) {
   };
 }
 
+function aggregateRevenueByDay(orders, limit = 7) {
+  const totals = orders.reduce((days, order) => {
+    days.set(order.date, (days.get(order.date) || 0) + order.total);
+    return days;
+  }, new Map());
+  return [...totals.entries()]
+    .map(([date, revenue]) => ({ date, revenue }))
+    .sort((first, second) => first.date.localeCompare(second.date))
+    .slice(-limit);
+}
+
+function renderRevenueTrend(orders = ORDERS) {
+  const dailyRevenue = aggregateRevenueByDay(orders);
+  const maximum = Math.max(...dailyRevenue.map((day) => day.revenue), 1);
+  const strongestDay = dailyRevenue.reduce((best, day) => day.revenue > best.revenue ? day : best, dailyRevenue[0]);
+  document.querySelector("#trendSummary").textContent = strongestDay
+    ? `Best day ${formatCurrency(strongestDay.revenue)}`
+    : "No sales yet";
+  document.querySelector("#revenueTrend").innerHTML = dailyRevenue.map((day) => {
+    const label = new Intl.DateTimeFormat("en-SG", { weekday: "short", timeZone: "Asia/Singapore" }).format(new Date(`${day.date}T12:00:00+08:00`));
+    const height = Math.max(4, Math.round((day.revenue / maximum) * 100));
+    return `
+      <li class="revenue-day" aria-label="${day.date}: ${formatCurrency(day.revenue)}">
+        <span class="revenue-bar-wrap" aria-hidden="true"><span class="revenue-bar" style="height: ${height}%"></span></span>
+        <strong>${formatCurrency(day.revenue)}</strong>
+        <time datetime="${day.date}">${label}</time>
+      </li>
+    `;
+  }).join("");
+}
+
 function renderOrders(orders = ORDERS) {
   const summary = summarizeOrders(orders);
   document.querySelector("#revenueMetric").textContent = formatCurrency(summary.revenue);
@@ -48,9 +79,12 @@ function renderOrders(orders = ORDERS) {
 }
 
 if (typeof document !== "undefined") {
-  document.addEventListener("DOMContentLoaded", () => renderOrders());
+  document.addEventListener("DOMContentLoaded", () => {
+    renderOrders();
+    renderRevenueTrend();
+  });
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { ORDERS, formatCurrency, summarizeOrders };
+  module.exports = { ORDERS, aggregateRevenueByDay, formatCurrency, summarizeOrders };
 }
