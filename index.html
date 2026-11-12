@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A compact dashboard for monitoring a small shop's recent performance.">
+    <title>Micro Shop Metrics</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div>
+        <p class="eyebrow">Daily operations</p>
+        <h1>Micro Shop Metrics</h1>
+        <p class="subtitle">A clear view of this week's sales and customer activity.</p>
+      </div>
+      <span class="status"><span aria-hidden="true"></span> Seed data updated</span>
+    </header>
+
+    <main>
+      <section class="metric-grid" aria-label="Shop summary">
+        <article class="metric-card">
+          <p>Revenue</p>
+          <strong id="revenueMetric">$0</strong>
+          <small>Across recent orders</small>
+        </article>
+        <article class="metric-card">
+          <p>Orders</p>
+          <strong id="ordersMetric">0</strong>
+          <small>Completed and processing</small>
+        </article>
+        <article class="metric-card">
+          <p>Average order</p>
+          <strong id="averageMetric">$0</strong>
+          <small>Revenue per order</small>
+        </article>
+        <article class="metric-card">
+          <p>Returning customers</p>
+          <strong id="returningMetric">0%</strong>
+          <small>Share of recent orders</small>
+        </article>
+      </section>
+
+      <section class="panel" aria-labelledby="ordersHeading">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Order activity</p>
+            <h2 id="ordersHeading">Recent orders</h2>
+          </div>
+          <span id="orderCount" class="pill">0 orders</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Order</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Channel</th>
+                <th scope="col">Items</th>
+                <th scope="col">Total</th>
+              </tr>
+            </thead>
+            <tbody id="ordersBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer>Built for quick, calm daily check-ins.</footer>
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "name": "micro-shop-metrics-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dependency-free small-business metrics dashboard",
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check app.js"
+  }
+}
