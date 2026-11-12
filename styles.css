@@ -74,6 +74,11 @@ h2 { margin-bottom: 0; font-size: 1.45rem; }
 
 .panel { margin-top: 1rem; padding: 1.25rem; }
 .panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.inventory-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; margin: 0; padding: 0; list-style: none; }
+.inventory-item { display: flex; justify-content: space-between; gap: 1rem; border: 1px solid #ead9c5; border-radius: 0.85rem; padding: 0.9rem; background: #fff9f1; }
+.inventory-item strong { display: block; margin-bottom: 0.2rem; }
+.inventory-item small { color: #7d6a57; }
+.stock-level { align-self: center; color: #9b4f34; font-weight: 800; white-space: nowrap; }
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; }
 th, td { padding: 0.9rem 0.75rem; border-bottom: 1px solid #e8ebe7; text-align: left; }
@@ -88,6 +93,7 @@ footer { padding: 1.5rem 0 3rem; color: #717b76; font-size: 0.8rem; text-align: 
 @media (max-width: 760px) {
   .site-header { align-items: flex-start; flex-direction: column; padding-top: 2.5rem; }
   .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .inventory-list { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 480px) {
