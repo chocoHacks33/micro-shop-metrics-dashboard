@@ -41,6 +41,24 @@
         </article>
       </section>
 
+      <section class="panel goal-panel" aria-labelledby="goalHeading">
+        <div class="goal-copy">
+          <p class="eyebrow">Weekly target</p>
+          <h2 id="goalHeading">Revenue goal</h2>
+          <p id="goalStatus" class="goal-status">Loading goal progress…</p>
+          <div class="goal-track" role="progressbar" aria-labelledby="goalHeading" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <span id="goalProgress"></span>
+          </div>
+        </div>
+        <form id="goalForm" class="goal-form">
+          <label for="revenueGoal">Target (SGD)</label>
+          <div>
+            <input id="revenueGoal" name="revenueGoal" type="number" min="1" step="1" inputmode="decimal" required>
+            <button type="submit">Save goal</button>
+          </div>
+        </form>
+      </section>
+
       <section class="panel" aria-labelledby="ordersHeading">
         <div class="panel-heading">
           <div>
