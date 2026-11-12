@@ -9,6 +9,14 @@ const ORDERS = [
   { id: "MS-101", date: "2026-11-06", customer: "Marcus Lee", channel: "In store", items: 3, total: 92.25, returning: true }
 ];
 
+const INVENTORY = [
+  { name: "Cedar candle", sku: "CDR-01", stock: 4, reorderPoint: 6 },
+  { name: "Linen tote", sku: "LNT-02", stock: 12, reorderPoint: 8 },
+  { name: "Stoneware mug", sku: "STM-03", stock: 3, reorderPoint: 5 },
+  { name: "Desk notepad", sku: "DSK-04", stock: 18, reorderPoint: 10 },
+  { name: "Tea sampler", sku: "TEA-05", stock: 2, reorderPoint: 4 }
+];
+
 function formatCurrency(value) {
   return new Intl.NumberFormat("en-SG", {
     style: "currency",
@@ -26,6 +34,23 @@ function summarizeOrders(orders) {
     average: orders.length ? revenue / orders.length : 0,
     returningRate: orders.length ? Math.round((returningOrders / orders.length) * 100) : 0
   };
+}
+
+function getLowStockItems(items) {
+  return items
+    .filter((item) => item.stock <= item.reorderPoint)
+    .sort((first, second) => (first.stock / first.reorderPoint) - (second.stock / second.reorderPoint));
+}
+
+function renderInventoryAlerts(items = INVENTORY) {
+  const lowStockItems = getLowStockItems(items);
+  document.querySelector("#inventoryCount").textContent = `${lowStockItems.length} ${lowStockItems.length === 1 ? "alert" : "alerts"}`;
+  document.querySelector("#inventoryAlerts").innerHTML = lowStockItems.map((item) => `
+    <li class="inventory-item">
+      <div><strong>${item.name}</strong><small>${item.sku} · reorder at ${item.reorderPoint}</small></div>
+      <span class="stock-level">${item.stock} left</span>
+    </li>
+  `).join("");
 }
 
 function renderOrders(orders = ORDERS) {
@@ -48,9 +73,12 @@ function renderOrders(orders = ORDERS) {
 }
 
 if (typeof document !== "undefined") {
-  document.addEventListener("DOMContentLoaded", () => renderOrders());
+  document.addEventListener("DOMContentLoaded", () => {
+    renderOrders();
+    renderInventoryAlerts();
+  });
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { ORDERS, formatCurrency, summarizeOrders };
+  module.exports = { INVENTORY, ORDERS, formatCurrency, getLowStockItems, summarizeOrders };
 }
