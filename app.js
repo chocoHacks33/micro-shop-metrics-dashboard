@@ -9,6 +9,9 @@ const ORDERS = [
   { id: "MS-101", date: "2026-11-06", customer: "Marcus Lee", channel: "In store", items: 3, total: 92.25, returning: true }
 ];
 
+const GOAL_STORAGE_KEY = "micro-shop-weekly-revenue-goal";
+const DEFAULT_REVENUE_GOAL = 750;
+
 function formatCurrency(value) {
   return new Intl.NumberFormat("en-SG", {
     style: "currency",
@@ -26,6 +29,27 @@ function summarizeOrders(orders) {
     average: orders.length ? revenue / orders.length : 0,
     returningRate: orders.length ? Math.round((returningOrders / orders.length) * 100) : 0
   };
+}
+
+function parseRevenueGoal(value, fallback = DEFAULT_REVENUE_GOAL) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+function calculateGoalProgress(revenue, goal) {
+  if (goal <= 0) return 0;
+  return Math.min(100, Math.max(0, Math.round((revenue / goal) * 100)));
+}
+
+function renderRevenueGoal(goal) {
+  const revenue = summarizeOrders(ORDERS).revenue;
+  const progress = calculateGoalProgress(revenue, goal);
+  const progressTrack = document.querySelector(".goal-track");
+  document.querySelector("#revenueGoal").value = String(goal);
+  document.querySelector("#goalStatus").textContent = `${formatCurrency(revenue)} of ${formatCurrency(goal)} · ${progress}%`;
+  document.querySelector("#goalProgress").style.width = `${progress}%`;
+  progressTrack.setAttribute("aria-valuenow", String(progress));
+  progressTrack.setAttribute("aria-valuetext", `${progress}% of the ${formatCurrency(goal)} revenue goal`);
 }
 
 function renderOrders(orders = ORDERS) {
@@ -48,9 +72,21 @@ function renderOrders(orders = ORDERS) {
 }
 
 if (typeof document !== "undefined") {
-  document.addEventListener("DOMContentLoaded", () => renderOrders());
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.querySelector("#goalForm");
+    const input = document.querySelector("#revenueGoal");
+    const savedGoal = parseRevenueGoal(localStorage.getItem(GOAL_STORAGE_KEY));
+    renderOrders();
+    renderRevenueGoal(savedGoal);
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const goal = parseRevenueGoal(input.value);
+      localStorage.setItem(GOAL_STORAGE_KEY, String(goal));
+      renderRevenueGoal(goal);
+    });
+  });
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { ORDERS, formatCurrency, summarizeOrders };
+  module.exports = { DEFAULT_REVENUE_GOAL, ORDERS, calculateGoalProgress, formatCurrency, parseRevenueGoal, summarizeOrders };
 }
