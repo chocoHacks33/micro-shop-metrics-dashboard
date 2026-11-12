@@ -1,6 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { ORDERS, formatCurrency, summarizeOrders } = require("../app.js");
+const { ORDERS, buildOrdersCsv, escapeCsvCell, formatCurrency, summarizeOrders } = require("../app.js");
 
 test("seed data includes multiple sales channels", () => {
   assert.deepEqual([...new Set(ORDERS.map((order) => order.channel))].sort(), ["In store", "Marketplace", "Online"]);
@@ -23,4 +23,18 @@ test("summarizeOrders handles an empty data set", () => {
 
 test("formatCurrency uses Singapore dollars", () => {
   assert.match(formatCurrency(42.5), /\$42\.50/);
+});
+
+test("escapeCsvCell quotes content and neutralizes spreadsheet formulas", () => {
+  assert.equal(escapeCsvCell('Mugs, "large"'), '"Mugs, ""large"""');
+  assert.equal(escapeCsvCell("=2+2"), '"\'=2+2"');
+  assert.equal(escapeCsvCell("-1+4"), '"\'-1+4"');
+});
+
+test("buildOrdersCsv includes a header and one row per order", () => {
+  const csv = buildOrdersCsv(ORDERS.slice(0, 2));
+  const rows = csv.split("\r\n");
+  assert.equal(rows.length, 3);
+  assert.match(rows[0], /"Order","Date","Customer"/);
+  assert.match(rows[1], /"MS-108"/);
 });

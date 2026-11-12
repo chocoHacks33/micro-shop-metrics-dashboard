@@ -28,6 +28,30 @@ function summarizeOrders(orders) {
   };
 }
 
+function escapeCsvCell(value) {
+  const raw = String(value ?? "");
+  const formulaSafe = /^[=+\-@]/.test(raw) ? `'${raw}` : raw;
+  return `"${formulaSafe.replaceAll('"', '""')}"`;
+}
+
+function buildOrdersCsv(orders) {
+  const header = ["Order", "Date", "Customer", "Channel", "Items", "Total SGD"];
+  const rows = orders.map((order) => [order.id, order.date, order.customer, order.channel, order.items, order.total.toFixed(2)]);
+  return [header, ...rows].map((row) => row.map(escapeCsvCell).join(",")).join("\r\n");
+}
+
+function downloadOrdersCsv(orders) {
+  const blob = new Blob([buildOrdersCsv(orders)], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "micro-shop-orders.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
 function renderOrders(orders = ORDERS) {
   const summary = summarizeOrders(orders);
   document.querySelector("#revenueMetric").textContent = formatCurrency(summary.revenue);
@@ -48,9 +72,12 @@ function renderOrders(orders = ORDERS) {
 }
 
 if (typeof document !== "undefined") {
-  document.addEventListener("DOMContentLoaded", () => renderOrders());
+  document.addEventListener("DOMContentLoaded", () => {
+    renderOrders();
+    document.querySelector("#exportOrders").addEventListener("click", () => downloadOrdersCsv(ORDERS));
+  });
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { ORDERS, formatCurrency, summarizeOrders };
+  module.exports = { ORDERS, buildOrdersCsv, escapeCsvCell, formatCurrency, summarizeOrders };
 }
