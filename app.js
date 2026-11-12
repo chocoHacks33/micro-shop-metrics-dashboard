@@ -28,6 +28,10 @@ function summarizeOrders(orders) {
   };
 }
 
+function filterOrdersByChannel(orders, channel) {
+  return channel === "All" ? [...orders] : orders.filter((order) => order.channel === channel);
+}
+
 function renderOrders(orders = ORDERS) {
   const summary = summarizeOrders(orders);
   document.querySelector("#revenueMetric").textContent = formatCurrency(summary.revenue);
@@ -48,9 +52,15 @@ function renderOrders(orders = ORDERS) {
 }
 
 if (typeof document !== "undefined") {
-  document.addEventListener("DOMContentLoaded", () => renderOrders());
+  document.addEventListener("DOMContentLoaded", () => {
+    const channelFilter = document.querySelector("#channelFilter");
+    renderOrders();
+    channelFilter.addEventListener("change", () => {
+      renderOrders(filterOrdersByChannel(ORDERS, channelFilter.value));
+    });
+  });
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { ORDERS, formatCurrency, summarizeOrders };
+  module.exports = { ORDERS, filterOrdersByChannel, formatCurrency, summarizeOrders };
 }
