@@ -47,7 +47,18 @@
             <p class="eyebrow">Order activity</p>
             <h2 id="ordersHeading">Recent orders</h2>
           </div>
-          <span id="orderCount" class="pill">0 orders</span>
+          <div class="panel-actions">
+            <label class="filter-control" for="channelFilter">
+              <span>Sales channel</span>
+              <select id="channelFilter">
+                <option value="All">All channels</option>
+                <option value="Online">Online</option>
+                <option value="In store">In store</option>
+                <option value="Marketplace">Marketplace</option>
+              </select>
+            </label>
+            <span id="orderCount" class="pill">0 orders</span>
+          </div>
         </div>
         <div class="table-wrap">
           <table>
