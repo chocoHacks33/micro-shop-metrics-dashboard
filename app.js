@@ -28,6 +28,10 @@ function summarizeOrders(orders) {
   };
 }
 
+function printDashboard(printPage = () => window.print()) {
+  printPage();
+}
+
 function renderOrders(orders = ORDERS) {
   const summary = summarizeOrders(orders);
   document.querySelector("#revenueMetric").textContent = formatCurrency(summary.revenue);
@@ -48,9 +52,12 @@ function renderOrders(orders = ORDERS) {
 }
 
 if (typeof document !== "undefined") {
-  document.addEventListener("DOMContentLoaded", () => renderOrders());
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector("#printReport").addEventListener("click", () => printDashboard());
+    renderOrders();
+  });
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { ORDERS, formatCurrency, summarizeOrders };
+  module.exports = { ORDERS, formatCurrency, printDashboard, summarizeOrders };
 }

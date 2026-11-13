@@ -52,6 +52,10 @@ h2 { margin-bottom: 0; font-size: 1.45rem; }
 }
 
 .status span { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: #4f8a5b; box-shadow: 0 0 0 4px #e0eddd; }
+.header-actions { display: flex; align-items: center; gap: 0.7rem; }
+.print-button { border: 1px solid #4f6f58; border-radius: 999px; padding: 0.55rem 0.85rem; background: #4f6f58; color: #fff; font: inherit; font-size: 0.8rem; font-weight: 750; cursor: pointer; }
+.print-button:hover { background: #3d5945; }
+.print-button:focus-visible { outline: 3px solid rgba(79, 138, 91, 0.3); outline-offset: 2px; }
 
 .metric-grid {
   display: grid;
@@ -88,9 +92,26 @@ footer { padding: 1.5rem 0 3rem; color: #717b76; font-size: 0.8rem; text-align: 
 @media (max-width: 760px) {
   .site-header { align-items: flex-start; flex-direction: column; padding-top: 2.5rem; }
   .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .header-actions { flex-wrap: wrap; }
 }
 
 @media (max-width: 480px) {
   .metric-grid { grid-template-columns: 1fr; }
   .metric-card strong { font-size: 1.55rem; }
+}
+
+@media print {
+  @page { size: portrait; margin: 14mm; }
+  :root { color-scheme: light; }
+  body { background: #fff; color: #111; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .site-header, main { width: 100%; }
+  .site-header { padding: 0 0 1rem; }
+  .subtitle { color: #333; }
+  .status, .print-button, footer { display: none; }
+  .metric-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.45rem; }
+  .metric-card, .panel { border-color: #bbb; box-shadow: none; background: #fff; break-inside: avoid; }
+  .metric-card { padding: 0.7rem; }
+  .metric-card strong { font-size: 1.35rem; }
+  .panel { margin-top: 0.7rem; padding: 0.8rem; }
+  th, td { padding: 0.55rem; }
 }

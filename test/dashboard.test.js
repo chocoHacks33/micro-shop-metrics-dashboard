@@ -1,6 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { ORDERS, formatCurrency, summarizeOrders } = require("../app.js");
+const { ORDERS, formatCurrency, printDashboard, summarizeOrders } = require("../app.js");
 
 test("seed data includes multiple sales channels", () => {
   assert.deepEqual([...new Set(ORDERS.map((order) => order.channel))].sort(), ["In store", "Marketplace", "Online"]);
@@ -23,4 +23,10 @@ test("summarizeOrders handles an empty data set", () => {
 
 test("formatCurrency uses Singapore dollars", () => {
   assert.match(formatCurrency(42.5), /\$42\.50/);
+});
+
+test("printDashboard delegates to the browser print function", () => {
+  let calls = 0;
+  printDashboard(() => { calls += 1; });
+  assert.equal(calls, 1);
 });
