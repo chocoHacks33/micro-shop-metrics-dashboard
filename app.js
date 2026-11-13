@@ -28,6 +28,43 @@ function summarizeOrders(orders) {
   };
 }
 
+function summarizeChannels(orders) {
+  const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0);
+  const channels = new Map();
+
+  orders.forEach((order) => {
+    const current = channels.get(order.channel) || { channel: order.channel, orders: 0, revenue: 0 };
+    current.orders += 1;
+    current.revenue += order.total;
+    channels.set(order.channel, current);
+  });
+
+  return [...channels.values()]
+    .map((channel) => ({
+      ...channel,
+      share: totalRevenue ? Math.round((channel.revenue / totalRevenue) * 100) : 0
+    }))
+    .sort((a, b) => b.revenue - a.revenue || a.channel.localeCompare(b.channel));
+}
+
+function renderChannelPerformance(orders = ORDERS) {
+  const channels = summarizeChannels(orders);
+  document.querySelector("#channelPerformance").innerHTML = channels.map((channel) => `
+    <article class="channel-row">
+      <div class="channel-copy">
+        <strong>${channel.channel}</strong>
+        <span>${channel.orders} ${channel.orders === 1 ? "order" : "orders"} · ${formatCurrency(channel.revenue)}</span>
+      </div>
+      <div class="channel-share">
+        <span>${channel.share}% of revenue</span>
+        <div class="channel-track" role="progressbar" aria-label="${channel.channel} revenue share" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${channel.share}">
+          <span style="width: ${channel.share}%"></span>
+        </div>
+      </div>
+    </article>
+  `).join("");
+}
+
 function renderOrders(orders = ORDERS) {
   const summary = summarizeOrders(orders);
   document.querySelector("#revenueMetric").textContent = formatCurrency(summary.revenue);
@@ -48,9 +85,12 @@ function renderOrders(orders = ORDERS) {
 }
 
 if (typeof document !== "undefined") {
-  document.addEventListener("DOMContentLoaded", () => renderOrders());
+  document.addEventListener("DOMContentLoaded", () => {
+    renderOrders();
+    renderChannelPerformance();
+  });
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { ORDERS, formatCurrency, summarizeOrders };
+  module.exports = { ORDERS, formatCurrency, summarizeChannels, summarizeOrders };
 }
