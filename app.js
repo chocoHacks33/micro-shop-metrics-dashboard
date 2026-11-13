@@ -28,6 +28,17 @@ function summarizeOrders(orders) {
   };
 }
 
+function sortOrders(orders, sortBy = "newest") {
+  const comparators = {
+    newest: (a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id),
+    oldest: (a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id),
+    "total-high": (a, b) => b.total - a.total,
+    "items-high": (a, b) => b.items - a.items || b.total - a.total
+  };
+
+  return [...orders].sort(comparators[sortBy] || comparators.newest);
+}
+
 function renderOrders(orders = ORDERS) {
   const summary = summarizeOrders(orders);
   document.querySelector("#revenueMetric").textContent = formatCurrency(summary.revenue);
@@ -48,9 +59,13 @@ function renderOrders(orders = ORDERS) {
 }
 
 if (typeof document !== "undefined") {
-  document.addEventListener("DOMContentLoaded", () => renderOrders());
+  document.addEventListener("DOMContentLoaded", () => {
+    const sortSelect = document.querySelector("#orderSort");
+    sortSelect.addEventListener("change", () => renderOrders(sortOrders(ORDERS, sortSelect.value)));
+    renderOrders(sortOrders(ORDERS));
+  });
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { ORDERS, formatCurrency, summarizeOrders };
+  module.exports = { ORDERS, formatCurrency, sortOrders, summarizeOrders };
 }
