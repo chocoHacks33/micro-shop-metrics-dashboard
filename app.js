@@ -28,6 +28,18 @@ function summarizeOrders(orders) {
   };
 }
 
+function renderOrderRow(order) {
+  return `
+    <tr>
+      <td data-label="Order"><span class="cell-value"><span class="order-id">${order.id}</span><span class="order-date">${order.date}</span></span></td>
+      <td data-label="Customer"><span class="cell-value">${order.customer}</span></td>
+      <td data-label="Channel"><span class="cell-value">${order.channel}</span></td>
+      <td data-label="Items"><span class="cell-value">${order.items}</span></td>
+      <td data-label="Total"><span class="cell-value">${formatCurrency(order.total)}</span></td>
+    </tr>
+  `;
+}
+
 function renderOrders(orders = ORDERS) {
   const summary = summarizeOrders(orders);
   document.querySelector("#revenueMetric").textContent = formatCurrency(summary.revenue);
@@ -36,15 +48,7 @@ function renderOrders(orders = ORDERS) {
   document.querySelector("#returningMetric").textContent = `${summary.returningRate}%`;
   document.querySelector("#orderCount").textContent = `${summary.count} ${summary.count === 1 ? "order" : "orders"}`;
 
-  document.querySelector("#ordersBody").innerHTML = orders.map((order) => `
-    <tr>
-      <td><span class="order-id">${order.id}</span><span class="order-date">${order.date}</span></td>
-      <td>${order.customer}</td>
-      <td>${order.channel}</td>
-      <td>${order.items}</td>
-      <td>${formatCurrency(order.total)}</td>
-    </tr>
-  `).join("");
+  document.querySelector("#ordersBody").innerHTML = orders.map(renderOrderRow).join("");
 }
 
 if (typeof document !== "undefined") {
@@ -52,5 +56,5 @@ if (typeof document !== "undefined") {
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { ORDERS, formatCurrency, summarizeOrders };
+  module.exports = { ORDERS, formatCurrency, renderOrderRow, summarizeOrders };
 }
