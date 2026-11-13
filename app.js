@@ -28,6 +28,14 @@ function summarizeOrders(orders) {
   };
 }
 
+function filterOrders(orders, query) {
+  const normalizedQuery = query.trim().toLocaleLowerCase();
+  if (!normalizedQuery) return [...orders];
+
+  return orders.filter((order) => [order.id, order.customer, order.channel, order.date]
+    .some((value) => String(value).toLocaleLowerCase().includes(normalizedQuery)));
+}
+
 function renderOrders(orders = ORDERS) {
   const summary = summarizeOrders(orders);
   document.querySelector("#revenueMetric").textContent = formatCurrency(summary.revenue);
@@ -36,7 +44,7 @@ function renderOrders(orders = ORDERS) {
   document.querySelector("#returningMetric").textContent = `${summary.returningRate}%`;
   document.querySelector("#orderCount").textContent = `${summary.count} ${summary.count === 1 ? "order" : "orders"}`;
 
-  document.querySelector("#ordersBody").innerHTML = orders.map((order) => `
+  document.querySelector("#ordersBody").innerHTML = orders.length ? orders.map((order) => `
     <tr>
       <td><span class="order-id">${order.id}</span><span class="order-date">${order.date}</span></td>
       <td>${order.customer}</td>
@@ -44,13 +52,17 @@ function renderOrders(orders = ORDERS) {
       <td>${order.items}</td>
       <td>${formatCurrency(order.total)}</td>
     </tr>
-  `).join("");
+  `).join("") : '<tr><td class="empty-state" colspan="5">No orders match your search.</td></tr>';
 }
 
 if (typeof document !== "undefined") {
-  document.addEventListener("DOMContentLoaded", () => renderOrders());
+  document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.querySelector("#orderSearch");
+    searchInput.addEventListener("input", () => renderOrders(filterOrders(ORDERS, searchInput.value)));
+    renderOrders();
+  });
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { ORDERS, formatCurrency, summarizeOrders };
+  module.exports = { ORDERS, filterOrders, formatCurrency, summarizeOrders };
 }

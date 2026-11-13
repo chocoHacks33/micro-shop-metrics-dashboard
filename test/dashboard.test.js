@@ -1,6 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { ORDERS, formatCurrency, summarizeOrders } = require("../app.js");
+const { ORDERS, filterOrders, formatCurrency, summarizeOrders } = require("../app.js");
 
 test("seed data includes multiple sales channels", () => {
   assert.deepEqual([...new Set(ORDERS.map((order) => order.channel))].sort(), ["In store", "Marketplace", "Online"]);
@@ -23,4 +23,16 @@ test("summarizeOrders handles an empty data set", () => {
 
 test("formatCurrency uses Singapore dollars", () => {
   assert.match(formatCurrency(42.5), /\$42\.50/);
+});
+
+test("filterOrders searches customer, ID, channel, and date case-insensitively", () => {
+  assert.deepEqual(filterOrders(ORDERS, "maya").map((order) => order.id), ["MS-108"]);
+  assert.deepEqual(filterOrders(ORDERS, "marketPLACE").map((order) => order.id), ["MS-106", "MS-102"]);
+  assert.deepEqual(filterOrders(ORDERS, "MS-104").map((order) => order.id), ["MS-104"]);
+  assert.equal(filterOrders(ORDERS, "2026-11-12").length, 2);
+});
+
+test("filterOrders preserves all orders for a blank query", () => {
+  assert.deepEqual(filterOrders(ORDERS, "   "), ORDERS);
+  assert.notEqual(filterOrders(ORDERS, ""), ORDERS);
 });
