@@ -1,6 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { ORDERS, formatCurrency, summarizeOrders } = require("../app.js");
+const { ORDERS, formatCurrency, renderOrderRow, summarizeOrders } = require("../app.js");
 
 test("seed data includes multiple sales channels", () => {
   assert.deepEqual([...new Set(ORDERS.map((order) => order.channel))].sort(), ["In store", "Marketplace", "Online"]);
@@ -23,4 +23,13 @@ test("summarizeOrders handles an empty data set", () => {
 
 test("formatCurrency uses Singapore dollars", () => {
   assert.match(formatCurrency(42.5), /\$42\.50/);
+});
+
+test("renderOrderRow includes labels for the mobile card layout", () => {
+  const row = renderOrderRow(ORDERS[0]);
+  for (const label of ["Order", "Customer", "Channel", "Items", "Total"]) {
+    assert.match(row, new RegExp(`data-label="${label}"`));
+  }
+  assert.match(row, /Maya Chen/);
+  assert.match(row, /MS-108/);
 });
