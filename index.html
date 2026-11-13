@@ -47,7 +47,18 @@
             <p class="eyebrow">Order activity</p>
             <h2 id="ordersHeading">Recent orders</h2>
           </div>
-          <span id="orderCount" class="pill">0 orders</span>
+          <div class="order-tools">
+            <label class="sort-control" for="orderSort">
+              <span>Sort orders</span>
+              <select id="orderSort">
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
+                <option value="total-high">Highest total</option>
+                <option value="items-high">Most items</option>
+              </select>
+            </label>
+            <span id="orderCount" class="pill">0 orders</span>
+          </div>
         </div>
         <div class="table-wrap">
           <table>
