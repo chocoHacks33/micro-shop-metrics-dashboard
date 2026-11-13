@@ -47,7 +47,13 @@
             <p class="eyebrow">Order activity</p>
             <h2 id="ordersHeading">Recent orders</h2>
           </div>
-          <span id="orderCount" class="pill">0 orders</span>
+          <div class="order-tools">
+            <label class="search-control" for="orderSearch">
+              <span>Search orders</span>
+              <input id="orderSearch" type="search" placeholder="Customer, ID or channel" autocomplete="off">
+            </label>
+            <span id="orderCount" class="pill" aria-live="polite">0 orders</span>
+          </div>
         </div>
         <div class="table-wrap">
           <table>
